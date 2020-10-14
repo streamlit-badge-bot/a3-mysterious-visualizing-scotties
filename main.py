@@ -74,15 +74,16 @@ st.write(collisions.head())
 collisions_count_month = collisions.copy()
 collisions_count_month.LATITUDE = collisions_count_month.LATITUDE.round(3)
 collisions_count_month.LONGITUDE = collisions_count_month.LONGITUDE.round(3)
-collisions_count_month = collisions_count_month.groupby(['LATITUDE', 'LONGITUDE', 'month']).count().TIME.reset_index()
+collisions_count_month = collisions_count_month.groupby(['LATITUDE', 'LONGITUDE', 'month', 'hour']).count().TIME.reset_index()
 
 slider = alt.binding_range(min=1, max=5, step=1, name="month")
 month = alt.selection_single(name=None, fields=['month'], bind=slider, init={'month': 1})
 
-collisions_map_plot = alt.Chart(collisions_count_month).mark_circle(size=2).encode(
+collisions_map_plot = alt.Chart(collisions_count_month).mark_circle(size=4).encode(
     alt.X('LATITUDE', scale=alt.Scale(zero=False, domain=[40.45, 40.955])),
     alt.Y('LONGITUDE', scale=alt.Scale(zero=False, domain=[-74.3, -73.65])),
-    alt.Color('TIME', title='Number of collisions', scale=alt.Scale(zero=False, domain=[0,20])),
+#    alt.Color('TIME', title='Number of collisions', scale=alt.Scale(zero=False, domain=[0,20])),
+    alt.Size('TIME', title='Number of collisions', scale=alt.Scale(domain=[0, 600])),
     tooltip=[alt.Tooltip('TIME', title='Number of collisions')]
 ).add_selection(
     month
@@ -90,14 +91,10 @@ collisions_map_plot = alt.Chart(collisions_count_month).mark_circle(size=2).enco
     month
 )
 
-collisions_counts_by_time = collisions.groupby(['month', 'TIME']).count().DATE.reset_index()
-collisions_counts_by_time.TIME = collisions_counts_by_time.TIME.apply(lambda x: pd.Timestamp(x))
-collisions_counts_by_time.TIME = pd.cut(collisions_counts_by_time.TIME, 24)
-collisions_counts_by_time.TIME = pd.IntervalIndex(collisions_counts_by_time.TIME).left
-collisions_counts_by_time.TIME = collisions_counts_by_time.TIME.dt.hour
+collisions_counts_by_time = collisions.groupby(['month', 'hour']).count().DATE.reset_index()
 
 collisions_hour_plot = alt.Chart(collisions_counts_by_time).mark_bar().encode(
-    alt.X('TIME', scale=alt.Scale(zero=False), title='Hour'),
+    alt.X('hour', scale=alt.Scale(zero=False), title='Hour'),
     alt.Y('DATE', scale=alt.Scale(zero=False)),
     tooltip=[alt.Tooltip('DATE', title='Number of collisions')]
 ).add_selection(
@@ -109,4 +106,4 @@ collisions_hour_plot = alt.Chart(collisions_counts_by_time).mark_bar().encode(
     width=300
 )
 
-st.write(collisions_map_plot | collisions_hour_plot)
+st.write(collisions_map_plot.transform_filter(selector_hour) | collisions_hour_plot.add_selection(selector_hour))
