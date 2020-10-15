@@ -8,17 +8,20 @@ st.markdown("<h1 style='text-align: center;'>NYC Taxi analysis</h1>", unsafe_all
 st.markdown("<h3 style='text-align: right; color: gray;'>Made by Ihor and Yuan</h3>", unsafe_allow_html=True)
 st.write("")
  
-@st.cache
+
 def load_taxi():
     return pd.read_csv("./taxi_cleaned_m1.csv")
-@st.cache
+
+def load_taxi_by_time():
+    return pd.read_csv("./taxi_by_hour.csv")
+
 def load_taxi_map_pickup_dropoff():
     return pd.read_csv("./taxi_map_pickup_dropoff.csv")
 
 taxi_map_pickup_dropoff = load_taxi_map_pickup_dropoff()
 taxi = load_taxi()
 st.write("## Taxi")
-st.write(taxi.head())
+# st.write(taxi.head())
 
 selector_pick = alt.selection_interval(empty='none', encodings=['x', 'y'])
 selector_drop = alt.selection_interval(empty='none', encodings=['x', 'y'])
@@ -43,7 +46,9 @@ taxi_map_pickup_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Pickups")
 
 selector_hour = alt.selection_interval(empty='all', encodings=['x'])
 
-hour_chart = alt.Chart(taxi.groupby("hour").count().dropoff_latitude.reset_index()).mark_bar().encode(
+taxi_by_hour = load_taxi_by_time()
+
+hour_chart = alt.Chart(taxi_by_hour).mark_bar().encode(
     alt.X("hour"),
     alt.Y("dropoff_latitude", title="Number of rides"),
     color=alt.condition(selector_hour, alt.value('blue'), alt.value('grey')),
@@ -58,22 +63,16 @@ st.write((taxi_map_pickup_chart | taxi_map_dropoff_chart).transform_filter(
     ) & hour_chart)
  
 
-@st.cache
+
 def load_collisions():
     return pd.read_csv("./collisions.csv")
+def load_collisions_by_time():
+    return pd.read_csv("./collisions_counts_by_time.csv")
 
-collisions = load_collisions()
-collisions.loc[:,'month'] = pd.to_datetime(collisions.DATE).dt.month
+collisions_count = load_collisions()
 st.write("## Collisions")
-st.write(collisions.head())
+#st.write(collisions.head())
 
-collisions_count = collisions.copy()    
-
-collisions_count.LATITUDE = pd.cut(collisions_count.LATITUDE, 100)
-collisions_count.LONGITUDE = pd.cut(collisions_count.LONGITUDE, 100)
-collisions_count.LATITUDE = pd.IntervalIndex(collisions_count.LATITUDE).left
-collisions_count.LONGITUDE = pd.IntervalIndex(collisions_count.LONGITUDE).left
-collisions_count = collisions_count.groupby(['LATITUDE', 'LONGITUDE', 'month', 'hour', 'is_taxi_related']).count().TIME.reset_index()
 
 slider = alt.binding_range(min=1, max=5, step=1, name="month")
 month = alt.selection_single(name=None, fields=['month'], bind=slider, init={'month': 1})
@@ -97,11 +96,11 @@ collisions_map_plot = alt.Chart(collisions_count).mark_square(size=5).encode(
     title="Collisions"
 )
 
-collisions_counts_by_time = collisions.groupby(['month', 'hour', 'is_taxi_related']).count().DATE.reset_index()
+collisions_counts_by_time = load_collisions_by_time()
 
 collisions_hour_plot = alt.Chart(collisions_counts_by_time).mark_bar().encode(
     alt.X('hour', scale=alt.Scale(zero=False), title='Hour'),
-    alt.Y('DATE', scale=alt.Scale(zero=False)),
+    alt.Y('DATE', scale=alt.Scale(zero=False), title='Number of collisions'),
     alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
     tooltip=[alt.Tooltip('DATE', title='Number of collisions')],
     opacity=alt.condition(selection, alt.value(1), alt.value(0.1))
