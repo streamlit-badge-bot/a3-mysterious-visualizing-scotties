@@ -10,7 +10,7 @@ st.write("")
  
 @st.cache
 def load_taxi():
-    return pd.read_csv("./taxi_cleaned_m1.csv").drop(columns="Unnamed: 0")
+    return pd.read_csv("./taxi_cleaned_m1.csv")
 @st.cache
 def load_taxi_map_pickup_dropoff():
     return pd.read_csv("./taxi_map_pickup_dropoff.csv")
@@ -57,7 +57,7 @@ st.write((taxi_map_pickup_chart | taxi_map_dropoff_chart).transform_filter(
 
 @st.cache
 def load_collisions():
-    return pd.read_csv("./collisions.csv").drop(columns="Unnamed: 0")
+    return pd.read_csv("./collisions.csv")
 
 collisions = load_collisions()
 collisions.loc[:,'month'] = pd.to_datetime(collisions.DATE).dt.month
