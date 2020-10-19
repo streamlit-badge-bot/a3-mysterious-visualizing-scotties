@@ -28,20 +28,53 @@ st.markdown("PLACEHOLDER. TAXI-RELATED DESCRIPTION AND INSTRUCTIONS ON USAGE.")
 with st.spinner(text="Loading..."):
     selector_pick = alt.selection_interval(empty='none', encodings=['x', 'y'])
     selector_drop = alt.selection_interval(empty='none', encodings=['x', 'y'])
+    binding_weekend = alt.binding_checkbox(name="weekend")
+    weekend = alt.selection_single(name=None, fields=['weekend'], bind=binding_weekend, init={'weekend': True})
+    binding_weekday = alt.binding_checkbox(name="weekday")
+    weekday = alt.selection_single(name=None, fields=['weekday'], bind=binding_weekday, init={'weekday': True})
+    
     
     taxi_map_dropoff_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Dropoffs").mark_square(size=5).encode(
         alt.X('dropoff_latitude', scale=alt.Scale(zero=False, domain=[40.5, 40.955])),
         alt.Y('dropoff_longitude', scale=alt.Scale(zero=False, domain=[-74.2, -73.65])),
         color = alt.condition(selector_drop, alt.value('blue'), alt.value('grey')),
         opacity=alt.condition(selector_drop, alt.value(1), alt.value(0.1))
-    ).add_selection(selector_pick)
+    ).add_selection(
+            selector_pick
+    ).add_selection(
+        weekend
+    ).add_selection(
+        weekday
+    ).transform_calculate(
+        selected_weekend = weekend["weekend"],
+        selected_weekday = weekday["weekday"]
+    ).transform_filter(
+        {'or': [
+                "toBoolean(datum.weekend) == datum.selected_weekend[0]", 
+                "toBoolean(datum.weekday) == datum.selected_weekday[0]"
+            ]}
+    )
     
     taxi_map_pickup_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Pickups").mark_square(size=5).encode(
         alt.X('pickup_latitude', scale=alt.Scale(zero=False, domain=[40.5, 40.955])),
         alt.Y('pickup_longitude', scale=alt.Scale(zero=False, domain=[-74.2, -73.65])),
         color = alt.condition(selector_pick, alt.value('red'), alt.value('grey')),
         opacity=alt.condition(selector_pick, alt.value(1), alt.value(0.1))
-    ).add_selection(selector_drop)
+    ).add_selection(
+            selector_drop
+    ).add_selection(
+        weekend
+    ).add_selection(
+        weekday
+    ).transform_calculate(
+        selected_weekend = weekend["weekend"],
+        selected_weekday = weekday["weekday"]
+    ).transform_filter(
+        {'or': [
+                "toBoolean(datum.weekend) == datum.selected_weekend[0]", 
+                "toBoolean(datum.weekday) == datum.selected_weekday[0]"
+            ]}
+    )
     
     selector_hour = alt.selection_interval(empty='all', encodings=['x'])
 
@@ -68,12 +101,8 @@ def load_collisions_by_time():
     return pd.read_csv("./collisions_counts_by_time.csv")
 
 collisions_count = load_collisions()
-collisions_count.loc[:, 'weekday'] = collisions_count.loc[:, 'weekday'].astype(bool)
-collisions_count.loc[:, 'weekend'] = collisions_count.loc[:, 'weekend'].astype(bool)
 
 collisions_counts_by_time = load_collisions_by_time()
-collisions_counts_by_time.loc[:, 'weekday'] = collisions_counts_by_time.loc[:, 'weekday'].astype(bool)
-collisions_counts_by_time.loc[:, 'weekend'] = collisions_counts_by_time.loc[:, 'weekend'].astype(bool)
 st.write("## Collisions")
 
          
@@ -95,7 +124,8 @@ with st.spinner(text="Loading..."):
         alt.Y('LONGITUDE', scale=alt.Scale(zero=False, domain=[-74.3, -73.65])),
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
         tooltip=[alt.Tooltip('TIME', title='Number of collisions')],
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.05))
+        # opacity=alt.condition(selection, 'TIME', alt.value(0.05), title='Number of collisions', legend=None)
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.05), title='Number of collisions', legend=None)
     ).add_selection(
         month
     ).transform_filter(
