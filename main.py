@@ -66,7 +66,7 @@ with st.spinner(text="Loading..."):
     weekday = alt.selection_single(name=None, fields=['weekday'], bind=binding_weekday, init={'weekday': True})
     
     
-    taxi_map_dropoff_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Dropoffs").mark_square(size=5).encode(
+    taxi_map_dropoff_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Dropoffs (selectable)").mark_square(size=5).encode(
         alt.X('dropoff_latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
         alt.Y('dropoff_longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
         color = alt.condition(selector_drop, alt.value('blue'), alt.value('grey')),
@@ -87,7 +87,7 @@ with st.spinner(text="Loading..."):
             ]}
     )
     
-    taxi_map_pickup_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Pickups").mark_square(size=5).encode(
+    taxi_map_pickup_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Pickups (selectable)").mark_square(size=5).encode(
         alt.X('pickup_latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
         alt.Y('pickup_longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
         color = alt.condition(selector_pick, alt.value('red'), alt.value('grey')),
@@ -111,7 +111,7 @@ with st.spinner(text="Loading..."):
     selector_hour = alt.selection_interval(empty='all', encodings=['x'])
 
     hour_chart = alt.Chart(taxi_by_hour).mark_bar().encode(
-        alt.X("hour", scale=alt.Scale(domain=[0, 23])),
+        alt.X("hour", scale=alt.Scale(domain=[-0.5, 23.5], nice=False), title='Hour (selectable)'),
         alt.Y("dropoff_latitude", title="Number of rides"),
         color=alt.condition(selector_hour, alt.value('blue'), alt.value('grey')),
         opacity=alt.condition(selector_hour, alt.value(1), alt.value(0.5))
@@ -182,8 +182,8 @@ with st.spinner(text="Loading..."):
     
     
     collisions_hour_plot = alt.Chart(collisions_counts_by_time).mark_bar().encode(
-        alt.X('hour', scale=alt.Scale(zero=False), title='Hour'),
-        alt.Y('sum(DATE)', scale=alt.Scale(domain=[0,1000]), title='Number of collisions'),
+        alt.X('hour', scale=alt.Scale(zero=False), title='Hour (selectable)'),
+        alt.Y('sum(DATE)', scale=alt.Scale(domain=[0,1200]), title='Number of collisions'),
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
         tooltip=[alt.Tooltip('DATE', title='Number of collisions')],
         opacity=alt.condition(selection, alt.value(1), alt.value(0.1)), 
