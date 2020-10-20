@@ -47,7 +47,7 @@ view_state = pdk.ViewState(
     latitude= 40.75,
     zoom=9.5,
     min_zoom=8,
-    max_zoom=9.5,
+    max_zoom=11,
     pitch=0,
     bearing=0)
 
@@ -111,7 +111,7 @@ with st.spinner(text="Loading..."):
     selector_hour = alt.selection_interval(empty='all', encodings=['x'])
 
     hour_chart = alt.Chart(taxi_by_hour).mark_bar().encode(
-        alt.X("hour"),
+        alt.X("hour", scale=alt.Scale(domain=[0, 23])),
         alt.Y("dropoff_latitude", title="Number of rides"),
         color=alt.condition(selector_hour, alt.value('blue'), alt.value('grey')),
         opacity=alt.condition(selector_hour, alt.value(1), alt.value(0.5))
