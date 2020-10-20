@@ -183,7 +183,7 @@ with st.spinner(text="Loading..."):
     
     collisions_hour_plot = alt.Chart(collisions_counts_by_time).mark_bar().encode(
         alt.X('hour', scale=alt.Scale(zero=False), title='Hour (selectable)'),
-        alt.Y('sum(DATE)', scale=alt.Scale(domain=[0,1250]), title='Total number of collisions'),
+        alt.Y('sum(DATE)', scale=alt.Scale(domain=[0,1300]), title='Total number of collisions'),
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
         tooltip=[alt.Tooltip('DATE', title='Number of collisions')],
         opacity=alt.condition(selection, alt.value(1), alt.value(0.1)), 
