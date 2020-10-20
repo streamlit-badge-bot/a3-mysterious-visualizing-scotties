@@ -1,6 +1,8 @@
 import pandas as pd
 import altair as alt
 import streamlit as st
+import pydeck as pdk
+import numpy as np
 
 alt.data_transformers.disable_max_rows()
 
@@ -9,6 +11,7 @@ st.markdown("<h3 style='text-align: right; color: gray;'>Made by Ihor and Yuan</
 st.markdown("PLACEHOLDER. RESEARCH QUESTIONS AND GENERAL DESCRIPTION WOULD GO HERE.")
 st.markdown("Data used can be found here: [taxis data](https://www.kaggle.com/c/new-york-city-taxi-fare-prediction/data?select=train.csv) and [collisions data](https://www.kaggle.com/nypd/vehicle-collisions).")
 st.markdown("Data is filtered to be from January 2015 to July 2015 for collisions and for January 2015 for taxis.")
+ 
  
 # -------------------------------------------
 # TAXIS PART
@@ -25,6 +28,35 @@ st.write("## Taxi")
 
 st.markdown("PLACEHOLDER. TAXI-RELATED DESCRIPTION AND INSTRUCTIONS ON USAGE.")         
          
+
+# -------------------------------------------
+# MAP PART
+layer = pdk.Layer(
+    'ScatterplotLayer',     # Change the `type` positional argument here
+    taxi_map_pickup_dropoff,
+    get_position=['pickup_longitude', 'pickup_latitude'],
+   # auto_highlight=True,
+    get_radius=200,          # Radius is given in meters
+    get_fill_color=[77, 5, 232, 1],  # blue rgba(31, 58, 147, 1)
+    #pickable=True
+    )
+
+
+view_state = pdk.ViewState(
+    longitude= -74.00,
+    latitude= 40.75,
+    zoom=9.5,
+    min_zoom=8,
+    max_zoom=9.5,
+    pitch=0,
+    bearing=0)
+
+# Combined all of it and render a viewport
+r = pdk.Deck(layers=[layer], initial_view_state=view_state, mapbox_key = "pk.eyJ1IjoieXVhbnl1YTQiLCJhIjoiY2tnaDN2ODNuMHFjdTM3cXQ1cjZ4ZjZ1bSJ9.7Rc5ptwp4PBKWFHC8iwPWg",
+             map_style="mapbox://styles/mapbox/light-v9")
+st.sidebar.write("NYC map for reference:")
+st.sidebar.write(r)
+
 with st.spinner(text="Loading..."):
     selector_pick = alt.selection_interval(empty='none', encodings=['x', 'y'])
     selector_drop = alt.selection_interval(empty='none', encodings=['x', 'y'])
@@ -35,8 +67,8 @@ with st.spinner(text="Loading..."):
     
     
     taxi_map_dropoff_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Dropoffs").mark_square(size=5).encode(
-        alt.X('dropoff_latitude', scale=alt.Scale(zero=False, domain=[40.5, 40.955])),
-        alt.Y('dropoff_longitude', scale=alt.Scale(zero=False, domain=[-74.2, -73.65])),
+        alt.X('dropoff_latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
+        alt.Y('dropoff_longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
         color = alt.condition(selector_drop, alt.value('blue'), alt.value('grey')),
         opacity=alt.condition(selector_drop, alt.value(1), alt.value(0.1))
     ).add_selection(
@@ -56,8 +88,8 @@ with st.spinner(text="Loading..."):
     )
     
     taxi_map_pickup_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Pickups").mark_square(size=5).encode(
-        alt.X('pickup_latitude', scale=alt.Scale(zero=False, domain=[40.5, 40.955])),
-        alt.Y('pickup_longitude', scale=alt.Scale(zero=False, domain=[-74.2, -73.65])),
+        alt.X('pickup_latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
+        alt.Y('pickup_longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
         color = alt.condition(selector_pick, alt.value('red'), alt.value('grey')),
         opacity=alt.condition(selector_pick, alt.value(1), alt.value(0.1))
     ).add_selection(
