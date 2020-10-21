@@ -8,11 +8,10 @@ alt.data_transformers.disable_max_rows()
 
 st.markdown("<h1 style='text-align: center;'>NYC Taxi analysis</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: right; color: gray;'>Made by Ihor and Yuan</h3>", unsafe_allow_html=True)
-st.markdown("It is well-know that the traffic in New York City can be quite troublesome.")
-st.markdown("In this project, we are trying to find how taxi moves around New York City across different times and how it is related to collision accidents.")
-st.markdown("This information is useful not only for city planners to prevent traffic congestion but also for individuals who could better plans ahead when needs to take a taxi.")
-st.markdown("The data is  from the [**Kaggle website**](https://www.kaggle.com). The datasets are [**taxis data**](https://www.kaggle.com/c/new-york-city-taxi-fare-prediction/data?select=train.csv) and [**collisions data**](https://www.kaggle.com/nypd/vehicle-collisions).")
-st.markdown("Data is filtered to be in January of 2015 for **taxis data** and the same for **collisions data**")
+st.write("## Project Overview")
+st.markdown("It is well-know that the traffic in New York City can be quite troublesome. In this project, we are trying to find how taxi moves around New York City across different times and how it is related to collision accidents. This information is useful not only for city planners to prevent traffic congestion but also for individuals who could better plans ahead when needs to take a taxi. Data is filtered to be in January of 2015 for taxis data and the same for collisions data.")
+st.markdown("The data is from the [**Kaggle website**](https://www.kaggle.com). The datasets are [**taxis data**](https://www.kaggle.com/c/new-york-city-taxi-fare-prediction/data?select=train.csv) and [**collisions data**](https://www.kaggle.com/nypd/vehicle-collisions).")
+
  
 # -------------------------------------------
 # TAXIS PART
@@ -25,21 +24,19 @@ def load_taxi_map_pickup_dropoff():
 
 taxi_map_pickup_dropoff = load_taxi_map_pickup_dropoff()
 taxi_by_hour = load_taxi_by_time()
-st.write("## Taxi")
 
-st.markdown("How taxi moves around NYC over time")    
-st.markdown("This plot below shows the pickup locations and the drop off locations of taxis in New York City")
-st.markdown("as well as the total number of taxi rides across different hours.")     
-st.markdown("Here are some motivation questions for you to discover: Where did people from downtown Manhattan go?")     
-st.markdown("Is there a difference between different hours?")  
+
+st.write("## How taxi moves around NYC over time")  
+st.markdown("This plot below shows the pickup locations and the drop off locations of taxis in New York City as well as the total number of taxi rides across different hours.")   
+st.markdown("Here are some motivation questions for you to discover: Where did people from downtown Manhattan go? Is there a difference between different hours?")     
 st.markdown("What did you find? Let's play with it! Off-Course, you can discover more interesting findings.")
-st.markdown("Instructions for use:")
-st.markdown("- [ ] Select a region in one of the locations plots on the top row")
-st.markdown("- [ ] Select a range of hours in the bar plot on the second row")
-st.markdown("- [ ] Move the hours you selected across the bar plot")
-st.markdown("- [ ] Observe the changes on the other location plot (points are highlighted in blue)")
-st.markdown("- [ ] You can filter by weekday or weekend if needed")
-st.markdown("- [ ]  If you find a location that interests you,  check out the map on the left to dive in for more details")
+st.markdown("**Instructions for use**:")
+st.markdown("[ ]  Select a region in one of the locations plots on the top row")
+st.markdown("[ ]  Select a range of hours in the bar plot on the second row")
+st.markdown("[ ]  Move the hours you selected across the bar plot")
+st.markdown("[ ]  Observe the changes on the other location plot (points are highlighted in blue)")
+st.markdown("[ ]  You can filter by weekday or weekend if needed")
+st.markdown("[ ]  If you find a location that interests you,  check out the map on the left to dive in for more details")
 # -------------------------------------------
 # MAP PART
 layer = pdk.Layer(
@@ -56,21 +53,19 @@ layer = pdk.Layer(
 view_state = pdk.ViewState(
     longitude= -74.00,
     latitude= 40.75,
-    zoom=10,
+    zoom=9.5,
     min_zoom=8,
-    max_zoom=13,
+    max_zoom=12,
     pitch=0,
     bearing=0)
 
 # Combined all of it and render a viewport
 r = pdk.Deck(layers=[layer], initial_view_state=view_state, mapbox_key = "pk.eyJ1IjoieXVhbnl1YTQiLCJhIjoiY2tnaDN2ODNuMHFjdTM3cXQ1cjZ4ZjZ1bSJ9.7Rc5ptwp4PBKWFHC8iwPWg",
              map_style="mapbox://styles/mapbox/light-v9")
-st.sidebar.write("NYC map for reference:")
-st.sidebar.write("If you find a location on the main plots that interest you,")
-st.sidebar.markdown("you can use the map below to dive in for more details.The usage is easy:")
-st.sidebar.markdown("- [ ]  Put your mouse on the map where it interests you.")
-st.sidebar.markdown("    > A hand symbol will show up.")
-st.sidebar.markdown("- [ ] Zoom-in to dive in or Zoom-out to get the ideal of the big picture")
+st.sidebar.write("## NYC map for reference")
+st.sidebar.write("If you find a location on the main plots that interest you, you can use the map below to dive in for more details. The usage is easy:")
+st.sidebar.markdown("[ ]   Put your mouse on the map where it interests you. A hand symbol will show up.")
+st.sidebar.markdown("[ ]   Zoom-in to dive in or Zoom-out to get the ideal of the big picture")
 st.sidebar.write(r)
 
 with st.spinner(text="Loading..."):
@@ -153,21 +148,16 @@ def load_collisions_by_time():
 collisions_count = load_collisions()
 
 collisions_counts_by_time = load_collisions_by_time()
-st.write("## Collisions")
-
-         
-st.markdown("How the taxi-related collision accidents change over time")   
-st.markdown("The plot below shows the location of collisions and the total number of collisions in New York City.") 
-st.markdown("The taxi-related collisions are highlighted in orange color.") 
-st.markdown("Here are some motivation questions for you to discover : Where did most of the taxi-related collision accidents happen?")   
-st.markdown("Did they happen more during rush hours?")
+st.write("## How the taxi-related collision accidents change over time") 
+st.markdown("The plot below shows the location of collisions and the total number of collisions in New York City. The taxi-related collisions are highlighted in orange color.") 
+st.markdown("Here are some motivation questions for you to discover : Where did most of the taxi-related collision accidents happen? Did they happen more during rush hours?")   
 st.markdown("What did you find? Let's play with it! Off-Course, you can explore more questions.") 
 st.markdown("Instructions for use") 
-st.markdown("- [ ] Select a range of hours in the bar plot on the right")  
-st.markdown("- [ ] Move the hours you selected across the bar plot") 
-st.markdown("- [ ] Observe the changes in the location plot on the left ") 
-st.markdown("- [ ] You can filter by weekday or weekend if needed") 
-st.markdown("- [ ]  If you find a location that interests you, check out the map on the left to dive in for more details.") 
+st.markdown("[ ]  Select a range of hours in the bar plot on the right")  
+st.markdown("[ ]  Move the hours you selected across the bar plot") 
+st.markdown("[ ]  Observe the changes in the location plot on the left ") 
+st.markdown("[ ]  You can filter by weekday or weekend if needed") 
+st.markdown("[ ]  If you find a location that interests you, check out the map on the left to dive in for more details.") 
   
          
 with st.spinner(text="Loading..."):
