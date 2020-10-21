@@ -10,7 +10,7 @@ st.markdown("<h1 style='text-align: center;'>NYC Taxi analysis</h1>", unsafe_all
 st.markdown("<h3 style='text-align: right; color: gray;'>Made by Ihor and Yuan</h3>", unsafe_allow_html=True)
 st.markdown("PLACEHOLDER. RESEARCH QUESTIONS AND GENERAL DESCRIPTION WOULD GO HERE.")
 st.markdown("Data used can be found here: [taxis data](https://www.kaggle.com/c/new-york-city-taxi-fare-prediction/data?select=train.csv) and [collisions data](https://www.kaggle.com/nypd/vehicle-collisions).")
-st.markdown("Data is filtered to be from January 2015 to July 2015 for collisions and for January 2015 for taxis.")
+st.markdown("Data is filtered to be for January 2015.")
  
  
 # -------------------------------------------
@@ -65,14 +65,13 @@ with st.spinner(text="Loading..."):
     binding_weekday = alt.binding_checkbox(name="weekday")
     weekday = alt.selection_single(name=None, fields=['weekday'], bind=binding_weekday, init={'weekday': True})
     
-    
     taxi_map_dropoff_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Dropoffs (selectable)").mark_square(size=5).encode(
         alt.Y('dropoff_latitude', title='dropoff latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
         alt.X('dropoff_longitude', title='dropoff longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
-        color = alt.condition(selector_drop, alt.value('blue'), alt.value('grey')),
+        color=alt.condition(selector_drop, alt.value('blue'), alt.value('grey')),
         opacity=alt.condition(selector_drop, alt.value(1), alt.value(0.1))
     ).add_selection(
-            selector_pick
+        selector_pick
     ).add_selection(
         weekend
     ).add_selection(
@@ -90,10 +89,10 @@ with st.spinner(text="Loading..."):
     taxi_map_pickup_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Pickups (selectable)").mark_square(size=5).encode(
         alt.Y('pickup_latitude', title='pickup latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
         alt.X('pickup_longitude', title='pickup longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
-        color = alt.condition(selector_pick, alt.value('red'), alt.value('grey')),
+        color=alt.condition(selector_pick, alt.value('red'), alt.value('grey')),
         opacity=alt.condition(selector_pick, alt.value(1), alt.value(0.1))
     ).add_selection(
-            selector_drop
+        selector_drop
     ).add_selection(
         weekend
     ).add_selection(
@@ -118,11 +117,14 @@ with st.spinner(text="Loading..."):
     ).properties(
         width=900,
         height=100
-    ).add_selection(selector_hour)
+    ).add_selection(
+        selector_hour
+    )
     
     st.write((taxi_map_pickup_chart | taxi_map_dropoff_chart).transform_filter(
         selector_hour
-        ) & hour_chart)
+        ) & hour_chart
+    )
  
 # -------------------------------------------
 # COLLISIONS PART
@@ -141,8 +143,6 @@ st.write("## Collisions")
 st.markdown("PLACEHOLDER. COLLISIONS-RELATED DESCRIPTION AND INSTRUCTIONS ON USAGE.")         
          
 with st.spinner(text="Loading..."):
-    slider = alt.binding_range(min=1, max=5, step=1, name="month")
-    month = alt.selection_single(name=None, fields=['month'], bind=slider, init={'month': 1})
     
     binding_weekend = alt.binding_checkbox(name="weekend")
     weekend = alt.selection_single(name=None, fields=['weekend'], bind=binding_weekend, init={'weekend': True})
@@ -159,10 +159,6 @@ with st.spinner(text="Loading..."):
         # opacity=alt.condition(selection, 'TIME', alt.value(0.05), title='Number of collisions', legend=None)
         opacity=alt.condition(selection, alt.value(1), alt.value(0.05), legend=None)
     ).add_selection(
-        month
-    ).transform_filter(
-        month
-    ).add_selection(
         selection
     ).properties(
         title="Collisions"
@@ -178,19 +174,17 @@ with st.spinner(text="Loading..."):
                 "toBoolean(datum.weekend) == datum.selected_weekend[0]", 
                 "toBoolean(datum.weekday) == datum.selected_weekday[0]"
             ]}
+    ).transform_filter(
+        selector_hour
     )
     
     
     collisions_hour_plot = alt.Chart(collisions_counts_by_time).mark_bar().encode(
         alt.X('hour', scale=alt.Scale(zero=False), title='Hour (selectable)'),
-        alt.Y('sum(DATE)', scale=alt.Scale(domain=[0,1400]), title='Total number of collisions'),
+        alt.Y('sum(DATE)', scale=alt.Scale(domain=[0,1150]), title='Total number of collisions'),
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
         tooltip=[alt.Tooltip('DATE', title='Number of collisions')],
         opacity=alt.condition(selection, alt.value(1), alt.value(0.1)), 
-    ).add_selection(
-        month
-    ).transform_filter(
-        month
     ).properties(
         height=300,
         width=300
@@ -202,8 +196,10 @@ with st.spinner(text="Loading..."):
                 "toBoolean(datum.weekend) == datum.selected_weekend[0]", 
                 "toBoolean(datum.weekday) == datum.selected_weekday[0]"
             ]}
+    ).add_selection(
+        selector_hour
     )
 
-    st.write((collisions_map_plot.transform_filter(selector_hour) | collisions_hour_plot.add_selection(selector_hour)).configure_legend(
+    st.write((collisions_map_plot | collisions_hour_plot).configure_legend(
         labelFontSize=15
     ))
