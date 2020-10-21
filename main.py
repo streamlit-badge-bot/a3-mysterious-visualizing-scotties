@@ -54,8 +54,8 @@ view_state = pdk.ViewState(
     longitude= -74.00,
     latitude= 40.75,
     zoom=9.5,
-    min_zoom=8,
-    max_zoom=12,
+    min_zoom=8.5,
+    max_zoom=13,
     pitch=0,
     bearing=0)
 
@@ -150,8 +150,8 @@ st.write("## How taxi-related collisions change over time")
 st.markdown("The plot below shows the location of collisions and the total number of collisions in New York City. The taxi-related collisions are highlighted in orange color.") 
 st.markdown("Here are some motivation questions for you to discover : Where did most of the taxi-related collision accidents happen? Did they happen more during rush hours?")   
 st.markdown("What did you find? Let's play with it! Off-Course, you can explore more questions.") 
-st.markdown("</sup></sub>**Instructions for use**:</sup></sub>") 
-st.markdown("- <sub><sup><sub><sup>Select a range of hours in the bar plot on the right</sup></sub></sup></sub>")  
+st.markdown("**Instructions for use**:") 
+st.markdown("- Select a range of hours in the bar plot on the right")  
 st.markdown("- Move the hours you selected across the bar plot") 
 st.markdown("- Observe the changes in the location plot on the left ") 
 st.markdown("- You can filter by weekday or weekend if needed") 
