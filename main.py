@@ -2,7 +2,6 @@ import pandas as pd
 import altair as alt
 import streamlit as st
 import pydeck as pdk
-import numpy as np
 
 alt.data_transformers.disable_max_rows()
 
@@ -12,7 +11,20 @@ st.write("## Project Overview")
 st.markdown("It is well-know that the traffic in New York City can be quite troublesome. In this project, we are trying to find how taxi moves around New York City across different times and how it is related to collision accidents. This information is useful not only for city planners to prevent traffic congestion but also for individuals who could better plans ahead when needs to take a taxi.")
 st.markdown("The data is from the [**Kaggle website**](https://www.kaggle.com). The datasets are [**taxis data**](https://www.kaggle.com/c/new-york-city-taxi-fare-prediction/data?select=train.csv) and [**collisions data**](https://www.kaggle.com/nypd/vehicle-collisions). Data is filtered to be in January of 2015 for taxis data and the same for collisions data.")
 
- 
+def _max_width_():
+   max_width_str = f"max-width: 2000px;"
+   st.markdown(
+       f"""
+   <style>
+   .reportview-container .main .block-container{{
+       {max_width_str}
+   }}
+   </style>    
+   """,
+       unsafe_allow_html=True,
+   )
+   
+_max_width_()
 # -------------------------------------------
 # TAXIS PART
 
@@ -28,15 +40,18 @@ taxi_by_hour = load_taxi_by_time()
 
 st.write("## How taxi moves around NYC over time")  
 st.markdown("This plot below shows the pickup locations and the drop off locations of taxis in New York City as well as the total number of taxi rides across different hours.")   
-st.markdown("Here are some motivation questions for you to discover: Where did people from downtown Manhattan go? Is there a difference between different hours?")     
+st.markdown("Here are some motivation questions for you to discover: Where did people from downtown Manhattan go? Is there a difference between different hours or weekends vs weekdays?")     
 st.markdown("What did you find? Let's play with it! Off-Course, you can discover more interesting findings.")
 st.markdown("**Instructions for use**:")
-st.markdown("- Select a region in one of the locations plots on the top row")
-st.markdown("- Select a range of hours in the bar plot on the second row")
-st.markdown("- Move the hours you selected across the bar plot")
-st.markdown("- Observe the changes on the other location plot (points are highlighted in blue)")
-st.markdown("- You can filter by weekday or weekend if needed")
-st.markdown("- If you find a location that interests you,  check out the map on the left to dive in for more details")
+st.markdown(
+"""
+- Select a region in one of the locations plots on the top row
+- Select a range of hours in the bar plot on the second row         
+- Move the hours you selected across the bar plot
+- Observe the changes on the other location plot (points are highlighted in blue and red correspondingly)
+- You can filter by weekday or weekend if needed
+- If you find a location that interests you,  check out the map on the left to dive in for more details
+""")
 # -------------------------------------------
 # MAP PART
 layer = pdk.Layer(
@@ -149,13 +164,17 @@ collisions_counts_by_time = load_collisions_by_time()
 st.write("## How taxi-related collisions change over time") 
 st.markdown("The plot below shows the location of collisions and the total number of collisions in New York City. The taxi-related collisions are highlighted in orange color.") 
 st.markdown("Here are some motivation questions for you to discover : Where did most of the taxi-related collision accidents happen? Did they happen more during rush hours?")   
-st.markdown("What did you find? Let's play with it! Off-Course, you can explore more questions.") 
+st.markdown("What did you find? Let's play with it! Off course, you can explore more questions.") 
 st.markdown("**Instructions for use**:") 
-st.markdown("- Select a range of hours in the bar plot on the right")  
-st.markdown("- Move the hours you selected across the bar plot") 
-st.markdown("- Observe the changes in the location plot on the left ") 
-st.markdown("- You can filter by weekday or weekend if needed") 
-st.markdown("- If you find a location that interests you, check out the map on the left to dive in for more details.") 
+st.markdown(
+"""
+- Select a range of hours in the bar plot on the right
+- Move the hours you selected across the bar plot
+- Observe the changes in the location plot on the left
+- You can filter by weekday or weekend if needed
+- You can additionally filter by taxi-related or unrelated accidents by clicking on a legend
+- If you find a location that interests you, check out the map on the left to dive in for more details.
+""")
   
          
 with st.spinner(text="Loading..."):
@@ -173,7 +192,7 @@ with st.spinner(text="Loading..."):
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
         tooltip=[alt.Tooltip('TIME', title='Total number of collisions')],
         # opacity=alt.condition(selection, 'TIME', alt.value(0.05), title='Number of collisions', legend=None)
-        opacity=alt.condition(selection, alt.value(1), alt.value(0.05), legend=None)
+        opacity=alt.condition(selection, alt.value(1), alt.value(0.04), legend=None)
     ).add_selection(
         selection
     ).properties(
