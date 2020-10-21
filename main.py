@@ -67,8 +67,8 @@ with st.spinner(text="Loading..."):
     
     
     taxi_map_dropoff_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Dropoffs (selectable)").mark_square(size=5).encode(
-        alt.X('dropoff_latitude', title='dropoff latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
-        alt.Y('dropoff_longitude', title='dropoff longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
+        alt.Y('dropoff_latitude', title='dropoff latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
+        alt.X('dropoff_longitude', title='dropoff longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
         color = alt.condition(selector_drop, alt.value('blue'), alt.value('grey')),
         opacity=alt.condition(selector_drop, alt.value(1), alt.value(0.1))
     ).add_selection(
@@ -88,8 +88,8 @@ with st.spinner(text="Loading..."):
     )
     
     taxi_map_pickup_chart = alt.Chart(taxi_map_pickup_dropoff, title="Taxi Pickups (selectable)").mark_square(size=5).encode(
-        alt.X('pickup_latitude', title='pickup latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
-        alt.Y('pickup_longitude', title='pickup longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
+        alt.Y('pickup_latitude', title='pickup latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
+        alt.X('pickup_longitude', title='pickup longitude', scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
         color = alt.condition(selector_pick, alt.value('red'), alt.value('grey')),
         opacity=alt.condition(selector_pick, alt.value(1), alt.value(0.1))
     ).add_selection(
@@ -152,8 +152,8 @@ with st.spinner(text="Loading..."):
     selection = alt.selection_single(fields=['is_taxi_related'], bind='legend', nearest=True)
     
     collisions_map_plot = alt.Chart(collisions_count).mark_square(size=5).encode(
-        alt.X('LATITUDE', title='latitude', scale=alt.Scale(zero=False, domain=[40.45, 40.955])),
-        alt.Y('LONGITUDE', title='longitude',scale=alt.Scale(zero=False, domain=[-74.3, -73.65])),
+        alt.Y('LATITUDE', title='latitude', scale=alt.Scale(zero=False, domain=[40.45, 40.955])),
+        alt.X('LONGITUDE', title='longitude',scale=alt.Scale(zero=False, domain=[-74.3, -73.65])),
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
         tooltip=[alt.Tooltip('TIME', title='Total number of collisions')],
         # opacity=alt.condition(selection, 'TIME', alt.value(0.05), title='Number of collisions', legend=None)
