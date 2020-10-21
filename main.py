@@ -40,17 +40,18 @@ taxi_by_hour = load_taxi_by_time()
 
 st.write("## How taxi moves around NYC over time")  
 st.markdown("This plot below shows the pickup locations and the drop off locations of taxis in New York City as well as the total number of taxi rides across different hours.")   
-st.markdown("Here are some motivation questions for you to discover: Where did people from downtown Manhattan go? Is there a difference between different hours or weekends vs weekdays?")     
-st.markdown("What did you find? Let's play with it! Off-Course, you can discover more interesting findings.")
+st.markdown("Here are some motivation questions for you to discover: Where did people from downtown Manhattan go in the evening vs during the day? Is there a difference between different hours or weekends vs weekdays?")     
+st.markdown("What did you find? Let's play with it! Of course, you can discover more interesting findings.")
 st.markdown("**Instructions for use**:")
 st.markdown(
 """
-- Select a region in one of the locations plots on the top row
+- Select a region in one of the locations plots on the top row by dragging an interval with a mouse
 - Select a range of hours in the bar plot on the second row         
 - Move the hours you selected across the bar plot
-- Observe the changes on the other location plot (points are highlighted in blue and red correspondingly)
+- Corresponding pickups / dropoffs are highlighted in blue or red correspondingly on the other location plot - you can see directions of taxi rides
 - You can filter by weekday or weekend if needed
-- If you find a location that interests you,  check out the map on the left to dive in for more details
+- If you find a location that interests you,  check out the map on the left to dive in for more details (e.g. that dense region is clearly a Manhatten)
+- Click on a plot to reset the selection for that plot
 """)
 # -------------------------------------------
 # MAP PART
@@ -163,8 +164,8 @@ collisions_count = load_collisions()
 collisions_counts_by_time = load_collisions_by_time()
 st.write("## How taxi-related collisions change over time") 
 st.markdown("The plot below shows the location of collisions and the total number of collisions in New York City. The taxi-related collisions are highlighted in orange color.") 
-st.markdown("Here are some motivation questions for you to discover : Where did most of the taxi-related collision accidents happen? Did they happen more during rush hours?")   
-st.markdown("What did you find? Let's play with it! Off course, you can explore more questions.") 
+st.markdown("Here are some motivation questions for you to discover : Do areas of the taxi-related collision accidents change during rush hours compared to other time? Are taxi-related collisions centered in some specific area and why?")   
+st.markdown("What did you find? Let's play with it! Of course, you can explore more questions.") 
 st.markdown("**Instructions for use**:") 
 st.markdown(
 """
@@ -173,7 +174,8 @@ st.markdown(
 - Observe the changes in the location plot on the left
 - You can filter by weekday or weekend if needed
 - You can additionally filter by taxi-related or unrelated accidents by clicking on a legend
-- If you find a location that interests you, check out the map on the left to dive in for more details.
+- If you find a location that interests you, check out the map on the left to dive in for more details
+- Click on a plot to reset the selection for that plot
 """)
   
          

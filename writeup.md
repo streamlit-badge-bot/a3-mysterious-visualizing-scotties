@@ -2,9 +2,7 @@
 
 ## Abstract
 
-[**APP Screenshot- Taxi Plot**](1.png)
-[**APP Screenshot-Collision Plot**](2.png)
-[**APP Screenshot-Map for Reference**](3.png)
+[APP Screenshot- Taxi Gif](taxi.gif)
 
 It is well-know that the traffic in New York City can be quite troublesome. Generally, people are encouraged to take the subway rather than ordering a taxi. In this project, we are trying to find how taxi moves around New York City across different time and how it is related to collision accidents. This information is useful not only for city planners to prevent traffic congestion but also for individuals who could better plans ahead when needs to take a taxi.
 
