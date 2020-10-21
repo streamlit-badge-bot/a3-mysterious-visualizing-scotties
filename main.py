@@ -186,11 +186,11 @@ with st.spinner(text="Loading..."):
     binding_weekday = alt.binding_checkbox(name="weekday")
     weekday = alt.selection_single(name=None, fields=['weekday'], bind=binding_weekday, init={'weekday': True})
     selector_hour = alt.selection_interval(empty='all', encodings=['x'])
-    selection = alt.selection_single(fields=['is_taxi_related'], bind='legend', nearest=True)
+    selection = alt.selection_single(fields=['is_taxi_related'], bind='legend', nearest=True, init={'is_taxi_related': 'Yes'})
     
     collisions_map_plot = alt.Chart(collisions_count).mark_square(size=5).encode(
-        alt.Y('LATITUDE', title='latitude', scale=alt.Scale(zero=False, domain=[40.45, 40.955])),
-        alt.X('LONGITUDE', title='longitude',scale=alt.Scale(zero=False, domain=[-74.3, -73.65])),
+        alt.Y('LATITUDE', title='latitude', scale=alt.Scale(zero=False, domain=[40.6, 40.9])),
+        alt.X('LONGITUDE', title='longitude',scale=alt.Scale(zero=False, domain=[-74.05, -73.75])),
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
         tooltip=[alt.Tooltip('TIME', title='Total number of collisions')],
         # opacity=alt.condition(selection, 'TIME', alt.value(0.05), title='Number of collisions', legend=None)
@@ -218,9 +218,9 @@ with st.spinner(text="Loading..."):
     
     collisions_hour_plot = alt.Chart(collisions_counts_by_time).mark_bar().encode(
         alt.X('hour', scale=alt.Scale(zero=False), title='Hour (selectable)'),
-        alt.Y('sum(DATE)', scale=alt.Scale(domain=[0,1150]), title='Total number of collisions'),
+        alt.Y('sum(TIME)', scale=alt.Scale(domain=[0,800]), title='Total number of collisions'),
         alt.Color('is_taxi_related', title='Is taxi related (clickable)', scale=alt.Scale(scheme='set2')),
-        tooltip=[alt.Tooltip('DATE', title='Number of collisions')],
+        tooltip=[alt.Tooltip('TIME', title='Number of collisions')],
         opacity=alt.condition(selection, alt.value(1), alt.value(0.1)), 
     ).properties(
         height=300,
