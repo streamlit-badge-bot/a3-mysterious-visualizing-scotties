@@ -6,6 +6,10 @@
 *We can see that people are mostly staying inside Manhattan during the day and actively riding out of it in the evening.*  
 *We can also see that during the weekend most taxi rides to the center of Manhattan are happening from the Manhattan.*  
 
+![APP Screenshot- Collisions Gif](collisions.gif)
+*On weekends all taxi-related collisions are happening close to Manhattan and during the day collisions are happening densely inside the Manhatten.*  
+*On weekends  non-taxi related collisions are uniformly spread over all NYC.*  
+
 It is well-know that the traffic in New York City can be quite troublesome. Generally, people are encouraged to take the subway rather than ordering a taxi. In this project, we are trying to find how taxi moves around New York City across different time and how it is related to collision accidents. This information is useful not only for city planners to prevent traffic congestion but also for individuals who could better plans ahead when needs to take a taxi.
 
 To answer the questions we have,  we used data from the [**Kaggle website**](https://www.kaggle.com). The datasets are [**taxis data**](https://www.kaggle.com/c/new-york-city-taxi-fare-prediction/data?select=train.csv) and [**collisions data**](https://www.kaggle.com/nypd/vehicle-collisions).  Data is filtered to be in January of 2015 for **taxis data** and the same for **collisions data**.
