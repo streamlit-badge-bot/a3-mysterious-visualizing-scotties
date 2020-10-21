@@ -28,8 +28,8 @@ taxi_by_hour = load_taxi_by_time()
 st.write("## Taxi")
 
 st.markdown("How taxi moves around NYC over time")    
-st.markdown("This plot below shows the pickup locations and 
-st.markdown("the drop off locations of taxis in New York City as well as the total number of taxi rides across different hours.")     
+st.markdown("This plot below shows the pickup locations and the drop off locations of taxis in New York City")
+st.markdown("as well as the total number of taxi rides across different hours.")     
 st.markdown("Here are some motivation questions for you to discover: Where did people from downtown Manhattan go?")     
 st.markdown("Is there a difference between different hours?")  
 st.markdown("What did you find? Let's play with it! Off-Course, you can discover more interesting findings.")
