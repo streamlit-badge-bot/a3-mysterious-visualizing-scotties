@@ -1,6 +1,6 @@
 # CMU Interactive Data Science Assigment 3
 
-* **Team members**: Ihor Markevych (imarkevy) and Yuanyuan Wang
+* **Team members**: Ihor Markevych (imarkevy) and Yuanyuan Wang (yuanyua4)
 * **Online URL**: https://share.streamlit.io/cmu-ids-2020/a3-mysterious-visualizing-scotties/main.py
 
 ## Instructions
